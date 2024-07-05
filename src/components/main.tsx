@@ -116,6 +116,7 @@ const MainContainer: React.FC<any> = () => {
           style={[styles.button, {width: slideWidth}]}
           onPress={() => {
             storeModeText(lText);
+            setModeText(lText); // 方便测试效果，正式代码中需删除
             translateX.value = withSpring(slideWidth * 0);
           }}>
           <Animated.Text style={[styles.buttonText, buttonTextColorAnimation]}>
@@ -126,6 +127,7 @@ const MainContainer: React.FC<any> = () => {
           style={[styles.button, {width: slideWidth}]}
           onPress={() => {
             storeModeText(dText);
+            setModeText(dText); // 方便测试效果，正式代码中需删除
             translateX.value = withSpring(slideWidth * 1);
           }}>
           <Animated.Text style={[styles.buttonText, buttonTextColorAnimation]}>
