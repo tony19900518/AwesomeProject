@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {Pressable, StyleSheet, useWindowDimensions} from 'react-native';
 import Animated, {
   useAnimatedStyle,
@@ -55,6 +55,39 @@ const MainContainer: React.FC<any> = () => {
           : withTiming(colors.WHITE),
     };
   });
+  // 页面加载时获取状态
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch(
+          'https://your-api-endpoint.com/getModeText',
+        );
+        const json = await response.json();
+        setModeText(json);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    fetchData();
+  }, []);
+  const storeModeText = (text: string) => {
+    fetch('https://your-api-endpoint.com/setModeText', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({text}),
+    })
+      .then(response => response.json())
+      .then(data => {
+        console.log('Success:', data);
+        //成功后更新状态
+        setModeText(text);
+      })
+      .catch(error => {
+        console.error('Error:', error);
+      });
+  };
   return (
     <Animated.View style={[styles.container, backgroundColorAnimation]}>
       <CircleIcon modeText={modeText} judgeText={lText} />
@@ -82,7 +115,7 @@ const MainContainer: React.FC<any> = () => {
         <Pressable
           style={[styles.button, {width: slideWidth}]}
           onPress={() => {
-            setModeText(lText);
+            storeModeText(lText);
             translateX.value = withSpring(slideWidth * 0);
           }}>
           <Animated.Text style={[styles.buttonText, buttonTextColorAnimation]}>
@@ -92,7 +125,7 @@ const MainContainer: React.FC<any> = () => {
         <Pressable
           style={[styles.button, {width: slideWidth}]}
           onPress={() => {
-            setModeText(dText);
+            storeModeText(dText);
             translateX.value = withSpring(slideWidth * 1);
           }}>
           <Animated.Text style={[styles.buttonText, buttonTextColorAnimation]}>
